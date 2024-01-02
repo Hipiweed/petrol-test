@@ -1,4 +1,3 @@
-'use client';
 import DashboardCardsTop from '@/components/DashboardCardsTop';
 import DashboardMiddleSection from '@/components/DashboardMiddleSection';
 

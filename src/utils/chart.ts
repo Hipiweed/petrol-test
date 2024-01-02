@@ -58,7 +58,7 @@ export const pieData = {
   ],
 };
 
-const gasChartLabels = [
+export const labels = [
   'January',
   'February',
   'March',
@@ -69,7 +69,7 @@ const gasChartLabels = [
 ];
 
 export const gasChartData = {
-  gasChartLabels,
+  labels,
   datasets: [
     {
       label: 'Diesel',
