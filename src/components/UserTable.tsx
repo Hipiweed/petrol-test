@@ -1,6 +1,6 @@
 'use client';
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import { useState, useEffect } from 'react';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
@@ -8,6 +8,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Image from 'next/image';
+import TableSortLabel from '@mui/material/TableSortLabel';
+import { User } from '../types/User';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,59 +32,133 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
+const theme = createTheme({
+  components: {
+    MuiTableSortLabel: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            color: 'inherit',
+            '&& $icon': {
+              opacity: 1,
+            },
+          },
+          '&.Mui-active': {
+            color: 'inherit',
+            '&& $icon': {
+              color: 'inherit',
+            },
+          },
+          '&:focus': {
+            color: 'inherit',
+          },
+        },
+      },
+    },
+  },
+});
+
+interface UserTableProps {
+  userData: {
+    id: number;
+    email: string;
+    first_name: string;
+    last_name: string;
+    avatar: string;
+  }[];
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
+function UserTable({ userData }: UserTableProps) {
+  console.log('userData', userData);
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [orderBy, setOrderBy] = useState<string | null>(null);
+  const [sortedData, setSortedData] = useState<User[]>(userData ?? []);
 
-export default function CustomizedTables() {
+  const handleSort = (field: string) => {
+    const isAsc = orderBy === field && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(field);
+
+    const sorted = [...sortedData].sort((a, b) => {
+      const fieldA = String(a[field]).toLowerCase();
+      const fieldB = String(b[field]).toLowerCase();
+
+      if (fieldA < fieldB) return isAsc ? 1 : -1;
+      if (fieldA > fieldB) return isAsc ? -1 : 1;
+      return 0;
+    });
+
+    setSortedData(sorted);
+  };
+
+  useEffect(() => {
+    setSortedData(userData ?? []);
+  }, [userData]);
+
   return (
-    <div className="p-3">
-      <div className="lg:col-span-2 col-span-6 bg-white w-full p-4 rounded shadow">
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 700 }} aria-label="customized table">
-            <TableHead>
-              <TableRow>
-                <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-                <StyledTableCell align="right">Calories</StyledTableCell>
-                <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-                <StyledTableCell align="right">
-                  Protein&nbsp;(g)
-                </StyledTableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <StyledTableRow key={row.name}>
-                  <StyledTableCell component="th" scope="row">
-                    {row.name}
+    <ThemeProvider theme={theme}>
+      <div className="p-3">
+        <div className="lg:col-span-2 col-span-6 bg-white w-full p-4 rounded shadow">
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>
+                    <TableSortLabel
+                      direction={orderBy === 'email' ? order : 'asc'}
+                      onClick={() => handleSort('email')}
+                    >
+                      Email
+                    </TableSortLabel>
                   </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.calories}
+                  <StyledTableCell>
+                    <TableSortLabel
+                      direction={orderBy === 'first_name' ? order : 'asc'}
+                      onClick={() => handleSort('first_name')}
+                    >
+                      First Name
+                    </TableSortLabel>
                   </StyledTableCell>
-                  <StyledTableCell align="right">{row.fat}</StyledTableCell>
-                  <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-                  <StyledTableCell align="right">{row.protein}</StyledTableCell>
-                </StyledTableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  <StyledTableCell>
+                    <TableSortLabel
+                      direction={orderBy === 'last_name' ? order : 'asc'}
+                      onClick={() => handleSort('last_name')}
+                    >
+                      Last Name
+                    </TableSortLabel>
+                  </StyledTableCell>
+                  <StyledTableCell>Avatar</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sortedData && sortedData.length > 0 ? (
+                  sortedData.map((row) => (
+                    <StyledTableRow key={row.id}>
+                      <StyledTableCell component="th" scope="row">
+                        {row.email}
+                      </StyledTableCell>
+                      <StyledTableCell>{row.first_name}</StyledTableCell>
+                      <StyledTableCell>{row.last_name}</StyledTableCell>
+                      <StyledTableCell>
+                        <Image
+                          src={row.avatar}
+                          width={40}
+                          height={40}
+                          alt="user avatar"
+                        ></Image>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                ) : (
+                  <h1>No data was found</h1>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
+
+export default UserTable;
