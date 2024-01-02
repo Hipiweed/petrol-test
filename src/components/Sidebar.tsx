@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { RxSketchLogo, RxDashboard, RxPerson } from 'react-icons/rx';
 
 function Sidebar({ children }: { children: React.ReactNode }) {

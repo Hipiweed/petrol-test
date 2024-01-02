@@ -1,7 +1,19 @@
+'use client';
+import { usePathname } from 'next/navigation';
+
 function Header() {
+  const path = usePathname();
+
+  let name = '';
+  if (path === '/') {
+    name = 'Dashboard';
+  } else if (path === '/users') {
+    name = 'Users';
+  }
+
   return (
-    <div className="flex justify-between px-4 pt-4">
-      <h2>Dashboard</h2>
+    <div className="flex justify-between px-4 pt-4 pb-2">
+      <h2>{name}</h2>
       <h2>Most accurate gas prices</h2>
     </div>
   );

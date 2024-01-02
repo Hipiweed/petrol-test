@@ -1,5 +1,6 @@
+import EnhancedTable from '@/components/UserTable';
 function Users() {
-  return <div>Users</div>;
+  return <EnhancedTable />;
 }
 
 export default Users;
