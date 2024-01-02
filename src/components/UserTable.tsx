@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import Image from 'next/image';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { User } from '../types/User';
+import FlipMove from 'react-flip-move';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -100,7 +101,7 @@ function UserTable({ userData }: UserTableProps) {
       <div className="p-3">
         <div className="lg:col-span-2 col-span-6 bg-white w-full p-4 rounded shadow">
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <Table aria-label="customized table">
               <TableHead>
                 <TableRow>
                   <StyledTableCell>
@@ -111,7 +112,7 @@ function UserTable({ userData }: UserTableProps) {
                       Email
                     </TableSortLabel>
                   </StyledTableCell>
-                  <StyledTableCell>
+                  <StyledTableCell className="hidden md:table-cell">
                     <TableSortLabel
                       direction={orderBy === 'first_name' ? order : 'asc'}
                       onClick={() => handleSort('first_name')}
@@ -119,7 +120,7 @@ function UserTable({ userData }: UserTableProps) {
                       First Name
                     </TableSortLabel>
                   </StyledTableCell>
-                  <StyledTableCell>
+                  <StyledTableCell className="hidden md:table-cell">
                     <TableSortLabel
                       direction={orderBy === 'last_name' ? order : 'asc'}
                       onClick={() => handleSort('last_name')}
@@ -127,19 +128,25 @@ function UserTable({ userData }: UserTableProps) {
                       Last Name
                     </TableSortLabel>
                   </StyledTableCell>
-                  <StyledTableCell>Avatar</StyledTableCell>
+                  <StyledTableCell className="hidden md:table-cell">
+                    Avatar
+                  </StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {sortedData && sortedData.length > 0 ? (
-                  sortedData.map((row) => (
+                <FlipMove typeName={null} duration={500} easing="ease-in">
+                  {sortedData.map((row) => (
                     <StyledTableRow key={row.id}>
                       <StyledTableCell component="th" scope="row">
                         {row.email}
                       </StyledTableCell>
-                      <StyledTableCell>{row.first_name}</StyledTableCell>
-                      <StyledTableCell>{row.last_name}</StyledTableCell>
-                      <StyledTableCell>
+                      <StyledTableCell className="hidden md:table-cell">
+                        {row.first_name}
+                      </StyledTableCell>
+                      <StyledTableCell className="hidden md:table-cell">
+                        {row.last_name}
+                      </StyledTableCell>
+                      <StyledTableCell className="hidden md:table-cell">
                         <Image
                           src={row.avatar}
                           width={40}
@@ -148,10 +155,8 @@ function UserTable({ userData }: UserTableProps) {
                         ></Image>
                       </StyledTableCell>
                     </StyledTableRow>
-                  ))
-                ) : (
-                  <h1>No data was found</h1>
-                )}
+                  ))}
+                </FlipMove>
               </TableBody>
             </Table>
           </TableContainer>
