@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 
 function UserDetailPage() {
-  const [userData, setUserData] = useState([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(false); // New loading state
   const pathName = usePathname();
   const emptyUser = {
