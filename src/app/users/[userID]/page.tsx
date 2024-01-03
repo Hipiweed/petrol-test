@@ -7,9 +7,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { User } from '@/types/User';
 
 function UserDetailPage() {
-  const [userData, setUserData] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false); // New loading state
-  const pathName = usePathname();
   const emptyUser: User = {
     id: null,
     email: '',
@@ -17,6 +14,9 @@ function UserDetailPage() {
     last_name: '',
     avatar: '',
   };
+  const [userData, setUserData] = useState<User>(emptyUser);
+  const [loading, setLoading] = useState(false); // New loading state
+  const pathName = usePathname();
 
   const getIdFromPath = (path: string) => {
     const pathSegments = path.split('/');
@@ -24,10 +24,6 @@ function UserDetailPage() {
     const pathID = Number(lastPath);
     if (!isNaN(pathID)) {
       return pathID;
-    }
-    if (lastPath === 'create') {
-      useState(emptyUser);
-      return;
     }
   };
 
