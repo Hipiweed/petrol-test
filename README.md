@@ -30,4 +30,4 @@ The file tree is src/app then you have all the main folders you will need types,
 
 ## Deploy on Vercel
 
-The app is depolyed on https://petrol-test-o9zl.vercel.app
+The app is depolyed on https://petrol-test-tt.vercel.app
