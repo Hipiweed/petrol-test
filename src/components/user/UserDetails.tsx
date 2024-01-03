@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import UserForm from '@/components/user/UserTable';
+import UserButtons from '@/components/user/UserButtons';
+import UserDetailsDisplay from '@/components/user/UserDetailsDisplay';
 import { Alert } from '@mui/material';
 import Image from 'next/image';
 import FlipMove from 'react-flip-move';
@@ -107,78 +108,24 @@ function UserDetails({ userDetails }: UserDetailsProps) {
                     ></Image>
                   </div>
                 )}
-                <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  type="email"
-                  value={localUser?.email}
-                  onChange={handleInputChange}
+                <UserForm
+                  user={localUser}
+                  handleInputChange={handleInputChange}
                 />
-                <TextField
-                  fullWidth
-                  label="First Name"
-                  name="first_name"
-                  value={localUser?.first_name}
-                  onChange={handleInputChange}
+                <UserButtons
+                  handleUpdate={handleUpdate}
+                  handleDelete={handleDelete}
+                  handleBack={handleBack}
+                  userId={localUser.id}
+                  userDetails={userDetails}
                 />
-                <TextField
-                  fullWidth
-                  label="Last Name"
-                  name="last_name"
-                  value={localUser?.last_name}
-                  onChange={handleInputChange}
-                />
-                <div className="grid gap-2">
-                  <Button
-                    variant="outlined"
-                    color="success"
-                    onClick={() => handleUpdate(localUser.id, localUser)}
-                  >
-                    Save Changes
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => handleDelete(localUser.id)}
-                    disabled={userDetails?.id == null}
-                  >
-                    Delete
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    disabled={userDetails?.id == null}
-                    onClick={handleBack}
-                  >
-                    Back
-                  </Button>
-                </div>
               </div>
             ) : (
-              <div key="non-edit-mode" className="mt-4 grid gap-3 items-center">
-                {userDetails?.avatar && userDetails?.avatar !== '' && (
-                  <div className="rounded-full overflow-hidden w-40 h-40 mx-auto">
-                    <Image
-                      src={userDetails?.avatar}
-                      width={200}
-                      height={200}
-                      alt="User Avatar"
-                    />
-                  </div>
-                )}
-                <p className="text-gray-700 text-lg">
-                  <strong>Email:</strong> {localUser?.email}
-                </p>
-                <p className="text-gray-700 text-lg">
-                  <strong>First Name:</strong> {localUser?.first_name}
-                </p>
-                <p className="text-gray-700 text-lg">
-                  <strong>Last Name:</strong> {localUser?.last_name}
-                </p>
-                <Button variant="outlined" onClick={handleEdit}>
-                  Edit Details
-                </Button>
-              </div>
+              <UserDetailsDisplay
+                userDetails={userDetails}
+                localUser={localUser}
+                handleEdit={handleEdit}
+              />
             )}
           </FlipMove>
         </div>
