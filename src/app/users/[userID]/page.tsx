@@ -1,5 +1,5 @@
 'use client';
-import UserDetails from '@/components/UserDetails';
+import UserDetails from '@/components/user/UserDetails';
 import { usePathname } from 'next/navigation';
 import { getUser } from '@/api/apiUsers'; // Import the getUser function
 import { useEffect, useState } from 'react';

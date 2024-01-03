@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import UserTable from '../../components/UserTable';
-import { getUsers } from '../../api/apiUsers'; // Import the getUsers function
+import UserTable from '@/components/user/UserTable';
+import { getUsers } from '@/api/apiUsers'; // Import the getUsers function
 
 function Users() {
   const [userData, setUserData] = useState([]);
