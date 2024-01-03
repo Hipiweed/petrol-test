@@ -20,12 +20,15 @@ function UserDetailPage() {
 
   const getIdFromPath = (path: string) => {
     const pathSegments = path.split('/');
-    const pathID = Number(pathSegments[pathSegments.length - 1]);
-    if (typeof pathID !== 'number') {
-      setUserData(emptyUser);
+    const lastPath = pathSegments[pathSegments.length - 1];
+    const pathID = Number(lastPath);
+    if (!isNaN(pathID)) {
+      return pathID;
+    }
+    if (lastPath === 'create') {
+      useState(emptyUser);
       return;
     }
-    return pathID;
   };
 
   useEffect(() => {
@@ -47,12 +50,10 @@ function UserDetailPage() {
     fetchUsers();
   }, []);
 
-  return loading ? (
+  return loading || !userData ? (
     <CircularProgress />
-  ) : userData ? (
-    <UserDetails userDetails={userData} />
   ) : (
-    <div>No user data available</div>
+    <UserDetails userDetails={userData} />
   );
 }
 
