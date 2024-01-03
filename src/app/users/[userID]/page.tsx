@@ -51,7 +51,9 @@ function UserDetailPage() {
   }, []);
 
   return loading || !userData ? (
-    <CircularProgress />
+    <div className="flex justify-center">
+      <CircularProgress />
+    </div>
   ) : (
     <UserDetails userDetails={userData} />
   );
