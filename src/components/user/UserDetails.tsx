@@ -6,7 +6,7 @@ import { Alert } from '@mui/material';
 import Image from 'next/image';
 import FlipMove from 'react-flip-move';
 import Snackbar from '@mui/material/Snackbar';
-import { deleteUser, updateUser, createUser } from '@/api/apiUsers'; // Import the getUser function
+import { deleteUser, updateUser, createUser } from '@/api/apiUsers';
 import { useRouter } from 'next/navigation';
 
 interface UserDetailsProps {
@@ -17,19 +17,19 @@ interface UserDetailsProps {
     last_name: string;
     avatar: string;
   };
-  updateUser: (updatedUser: typeof user) => void; // Function to handle user updates
+  updateUser: (updatedUser: typeof user) => void;
 }
 
 function UserDetails({ userDetails }: UserDetailsProps) {
   const router = useRouter();
-  const [editing, setEditing] = useState(false); // State variable to toggle between viewing and editing modes
-  const [localUser, setLocalUser] = useState(userDetails); // Local copy of user data
+  const [editing, setEditing] = useState(false);
+  const [localUser, setLocalUser] = useState(userDetails);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
 
   useEffect(() => {
     if (userDetails?.id == null) setEditing(true);
-  }, [userDetails]);
+  }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLocalUser({ ...localUser, [event.target.name]: event.target.value });
@@ -88,14 +88,15 @@ function UserDetails({ userDetails }: UserDetailsProps) {
   const handleBack = () => {
     setEditing(false);
   };
+
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
         <div className="mb-4">
           <h2 className="text-gray-800 text-2xl font-semibold">User Details</h2>
-          <FlipMove duration={500} easing="ease-in">
+          <FlipMove>
             {editing ? (
-              <div className="space-y-5 pb-2">
+              <div key="edit-mode" className="space-y-5 pb-2">
                 {userDetails?.avatar && userDetails?.avatar !== '' && (
                   <div className="rounded-full overflow-hidden w-40 h-40 mx-auto">
                     <Image
@@ -154,7 +155,7 @@ function UserDetails({ userDetails }: UserDetailsProps) {
                 </div>
               </div>
             ) : (
-              <div className="mt-4 grid gap-3 items-center">
+              <div key="non-edit-mode" className="mt-4 grid gap-3 items-center">
                 {userDetails?.avatar && userDetails?.avatar !== '' && (
                   <div className="rounded-full overflow-hidden w-40 h-40 mx-auto">
                     <Image
