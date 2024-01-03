@@ -1,5 +1,5 @@
-import DashboardCardsTop from '@/components/DashboardCardsTop';
-import DashboardMiddleSection from '@/components/DashboardMiddleSection';
+import DashboardCardsTop from '@/components/dashboard/DashboardCardsTop';
+import DashboardMiddleSection from '@/components/dashboard/DashboardMiddleSection';
 
 export default function Home() {
   return (
