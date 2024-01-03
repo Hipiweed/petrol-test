@@ -1,6 +1,6 @@
-import GasPriceChart from '@/components/GasPriceChart';
-import AveragePricePieChart from '@/components/AveragePricePieChart';
-import { statistics } from '../utils/chart';
+import GasPriceChart from '@/components/charts/GasPriceChart';
+import AveragePricePieChart from '@/components/charts/AveragePricePieChart';
+import { statistics } from '@/utils/chart';
 
 function DashboardMiddleSection() {
   return (

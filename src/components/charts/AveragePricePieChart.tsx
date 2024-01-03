@@ -1,7 +1,7 @@
 'use client';
 
 import { Pie } from 'react-chartjs-2';
-import { optionsPieChart, pieData } from '../utils/chart';
+import { optionsPieChart, pieData } from '@/utils/chart';
 import 'chart.js/auto';
 
 function AveragePricePieChart() {
