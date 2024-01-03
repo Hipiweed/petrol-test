@@ -6,7 +6,8 @@ import { Alert } from '@mui/material';
 import Image from 'next/image';
 import FlipMove from 'react-flip-move';
 import Snackbar from '@mui/material/Snackbar';
-import { deleteUser, updateUser } from '@/api/apiUsers'; // Import the getUser function
+import { deleteUser, updateUser, createUser } from '@/api/apiUsers'; // Import the getUser function
+import { useRouter } from 'next/navigation';
 
 interface UserDetailsProps {
   userDetails: {
@@ -20,6 +21,7 @@ interface UserDetailsProps {
 }
 
 function UserDetails({ userDetails }: UserDetailsProps) {
+  const router = useRouter();
   const [editing, setEditing] = useState(false); // State variable to toggle between viewing and editing modes
   const [localUser, setLocalUser] = useState(userDetails); // Local copy of user data
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -61,14 +63,22 @@ function UserDetails({ userDetails }: UserDetailsProps) {
     }
   };
 
-  const handleUpdate = async (userId: number, localUser) => {
+  const handleUpdate = async (userId: number | undefined, localUser) => {
     try {
       setEditing(false);
-      const user = await updateUser(userId, localUser);
+      let user;
+      if (userId) user = await updateUser(userId, localUser);
+      if (!userId) user = await createUser(localUser);
       if (user) {
         setLocalUser(user);
         setSnackbarOpen(true);
-        setSnackbarMessage('User updated successfully');
+        if (userId) setSnackbarMessage('User updated successfully');
+        if (!userId) {
+          setSnackbarMessage('User created successfully');
+          setTimeout(() => {
+            router.push(`/users`);
+          }, 1000);
+        }
       }
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -78,7 +88,6 @@ function UserDetails({ userDetails }: UserDetailsProps) {
   const handleBack = () => {
     setEditing(false);
   };
-
   return (
     <div className="flex items-center justify-center h-screen">
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col">
@@ -174,6 +183,7 @@ function UserDetails({ userDetails }: UserDetailsProps) {
         </div>
       </div>
       <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleClose}
