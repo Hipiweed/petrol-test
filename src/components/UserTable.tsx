@@ -121,15 +121,19 @@ function UserTable({ userData }: UserTableProps) {
     <ThemeProvider theme={theme}>
       <div className="p-3">
         <div className="lg:col-span-2 col-span-6 bg-white w-full p-4 rounded shadow">
-          <div className="flex justify-between mb-4">
+          <div className="flex flex-col md:flex-row justify-between mb-4">
             <input
               type="text"
               placeholder="Search for users..."
               value={searchTerm}
               onChange={handleSearch}
-              className="p-2 border border-gray-300 rounded"
+              className="p-2 border border-gray-300 rounded mb-2 md:mb-0"
             />
-            <Button variant="outlined" onClick={handleCreateUser}>
+            <Button
+              variant="outlined"
+              onClick={handleCreateUser}
+              className="w-full md:w-auto"
+            >
               Create User
             </Button>
           </div>
