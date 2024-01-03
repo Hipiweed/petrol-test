@@ -12,6 +12,8 @@ import Image from 'next/image';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import { User } from '../types/User';
 import FlipMove from 'react-flip-move';
+import { useRouter } from 'next/navigation';
+import Button from '@mui/material/Button';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -70,10 +72,11 @@ interface UserTableProps {
 }
 
 function UserTable({ userData }: UserTableProps) {
-  console.log('userData', userData);
+  const router = useRouter();
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
   const [orderBy, setOrderBy] = useState<string | null>(null);
   const [sortedData, setSortedData] = useState<User[]>(userData ?? []);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const handleSort = (field: string) => {
     const isAsc = orderBy === field && order === 'asc';
@@ -92,14 +95,44 @@ function UserTable({ userData }: UserTableProps) {
     setSortedData(sorted);
   };
 
+  const handleRowClick = (rowId) => {
+    router.push(`/users/${rowId}`);
+  };
+  const handleCreateUser = () => {
+    router.push(`/users/create`);
+  };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
   useEffect(() => {
     setSortedData(userData ?? []);
   }, [userData]);
+
+  useEffect(() => {
+    const filteredData = userData?.filter((user) =>
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()),
+    );
+    setSortedData(filteredData);
+  }, [searchTerm]);
 
   return (
     <ThemeProvider theme={theme}>
       <div className="p-3">
         <div className="lg:col-span-2 col-span-6 bg-white w-full p-4 rounded shadow">
+          <div className="flex justify-between mb-4">
+            <input
+              type="text"
+              placeholder="Search for users..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="p-2 border border-gray-300 rounded"
+            />
+            <Button variant="outlined" onClick={handleCreateUser}>
+              Create User
+            </Button>
+          </div>
           <TableContainer component={Paper}>
             <Table aria-label="customized table">
               <TableHead>
@@ -135,8 +168,12 @@ function UserTable({ userData }: UserTableProps) {
               </TableHead>
               <TableBody>
                 <FlipMove typeName={null} duration={500} easing="ease-in">
-                  {sortedData.map((row) => (
-                    <StyledTableRow key={row.id}>
+                  {sortedData?.map((row) => (
+                    <StyledTableRow
+                      className="cursor-pointer"
+                      onClick={() => handleRowClick(row.id)}
+                      key={row.id}
+                    >
                       <StyledTableCell component="th" scope="row">
                         {row.email}
                       </StyledTableCell>
