@@ -4,12 +4,13 @@ import { usePathname } from 'next/navigation';
 import { getUser } from '@/api/apiUsers'; // Import the getUser function
 import { useEffect, useState } from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
+import { User } from '@/types/User';
 
 function UserDetailPage() {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(false); // New loading state
   const pathName = usePathname();
-  const emptyUser = {
+  const emptyUser: User = {
     id: null,
     email: '',
     first_name: '',
@@ -32,8 +33,10 @@ function UserDetailPage() {
       setLoading(true); // Start loading
       try {
         const userId = getIdFromPath(pathName);
-        const user = await getUser(userId);
-        setUserData(user);
+        if (userId) {
+          const user = await getUser(userId);
+          setUserData(user.data);
+        }
       } catch (error) {
         console.error('Error fetching users:', error);
       } finally {
@@ -46,8 +49,10 @@ function UserDetailPage() {
 
   return loading ? (
     <CircularProgress />
+  ) : userData ? (
+    <UserDetails userDetails={userData} />
   ) : (
-    <UserDetails userDetails={userData?.data} />
+    <div>No user data available</div>
   );
 }
 

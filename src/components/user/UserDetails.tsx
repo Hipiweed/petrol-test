@@ -8,16 +8,16 @@ import FlipMove from 'react-flip-move';
 import Snackbar from '@mui/material/Snackbar';
 import { deleteUser, updateUser, createUser } from '@/api/apiUsers';
 import { useRouter } from 'next/navigation';
+import { User } from '@/types/User';
 
 interface UserDetailsProps {
   userDetails: {
-    id: number;
+    id: number | null;
     email: string;
     first_name: string;
     last_name: string;
     avatar: string;
   };
-  updateUser: (updatedUser: typeof user) => void;
 }
 
 function UserDetails({ userDetails }: UserDetailsProps) {
@@ -51,8 +51,9 @@ function UserDetails({ userDetails }: UserDetailsProps) {
     setSnackbarOpen(false);
   };
 
-  const handleDelete = async (userId: number) => {
+  const handleDelete = async (userId: number | null) => {
     try {
+      if (!userId) throw new Error('User ID is null');
       const user = await deleteUser(userId);
       if (user === '') {
         setSnackbarOpen(true);
@@ -63,7 +64,7 @@ function UserDetails({ userDetails }: UserDetailsProps) {
     }
   };
 
-  const handleUpdate = async (userId: number | undefined, localUser) => {
+  const handleUpdate = async (userId: number | null, localUser: User) => {
     try {
       setEditing(false);
       let user;

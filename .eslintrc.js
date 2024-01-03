@@ -31,5 +31,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'react/jsx-uses-react': 'off',
     'linebreak-style': ['error', 'unix'],
+    '@typescript-eslint/no-explicit-any': 'off',
   },
 };

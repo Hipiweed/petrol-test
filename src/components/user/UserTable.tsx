@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Image from 'next/image';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import { User } from '../types/User';
+import { User } from '@/types/User';
 import FlipMove from 'react-flip-move';
 import { useRouter } from 'next/navigation';
 import Button from '@mui/material/Button';
@@ -63,7 +63,7 @@ const theme = createTheme({
 
 interface UserTableProps {
   userData: {
-    id: number;
+    id: number | null;
     email: string;
     first_name: string;
     last_name: string;
@@ -84,8 +84,8 @@ function UserTable({ userData }: UserTableProps) {
     setOrderBy(field);
 
     const sorted = [...sortedData].sort((a, b) => {
-      const fieldA = String(a[field]).toLowerCase();
-      const fieldB = String(b[field]).toLowerCase();
+      const fieldA = String(a[field as keyof User]).toLowerCase();
+      const fieldB = String(b[field as keyof User]).toLowerCase();
 
       if (fieldA < fieldB) return isAsc ? 1 : -1;
       if (fieldA > fieldB) return isAsc ? -1 : 1;
@@ -95,7 +95,7 @@ function UserTable({ userData }: UserTableProps) {
     setSortedData(sorted);
   };
 
-  const handleRowClick = (rowId) => {
+  const handleRowClick = (rowId: number | null) => {
     router.push(`/users/${rowId}`);
   };
   const handleCreateUser = () => {

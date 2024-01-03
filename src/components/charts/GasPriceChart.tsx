@@ -36,7 +36,10 @@ const options = {
     },
     tooltip: {
       callbacks: {
-        label: function (context) {
+        label: function (context: {
+          dataset: { label?: string };
+          parsed: { y: number | null };
+        }) {
           let label = context.dataset.label || '';
 
           if (context.parsed.y !== null) {
@@ -47,18 +50,17 @@ const options = {
         },
       },
     },
-  },
-  scales: {
-    y: {
-      ticks: {
-        callback: function (value: number) {
-          return '€' + value.toFixed(2);
+    scales: {
+      y: {
+        ticks: {
+          callback: function (value: number | string) {
+            return typeof value === 'number' ? value.toFixed(2) : value;
+          },
         },
       },
     },
   },
 };
-
 function GasPriceChart() {
   return <Line options={options} data={gasChartData} />;
 }
